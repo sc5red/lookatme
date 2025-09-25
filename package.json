@@ -7,13 +7,17 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "tailwind": "tailwindcss -i ./public/css/input.css -o ./public/css/styles.css --watch"
   },
   "dependencies": {
+    "@tailwindcss/cli": "^4.1.13",
     "bcrypt": "^6.0.0",
     "crypto": "^1.0.1",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "tailwind": "^4.0.0",
+    "tailwindcss": "^4.1.13"
   }
 }
