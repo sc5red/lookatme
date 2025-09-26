@@ -1,82 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-/* Simple class-based dark mode overrides with higher specificity */
-.dark body {
-  --tw-bg-opacity: 1;
-  background-color: rgb(17 24 39 / var(--tw-bg-opacity)) !important;
-  --tw-text-opacity: 1;
-  color: rgb(243 244 246 / var(--tw-text-opacity)) !important;
+@layer base {
+  * { font-family: "Poppins", sans-serif; }
+  html { color-scheme: light; }
+  html.dark { color-scheme: dark; }
+  /* Reserve space for scrollbar to prevent layout shift when content height changes */
+  html { scrollbar-gutter: stable both-edges; }
+  body { overflow-y: scroll; }
 }
 
-.dark header {
-  --tw-bg-opacity: 1;
-  background-color: rgb(31 41 55 / var(--tw-bg-opacity)) !important;
+/* Class-based dark palette (no media queries) */
+@layer utilities {
+  html.dark body { background-color:#111827; color:#f3f4f6; }
+  html.dark header { background-color:#1f2937; }
+  html.dark #user-menu { background-color:#374151; border:1px solid #4b5563; }
+  html.dark aside { background-color:#1f2937; border:1px solid #374151; }
+  html.dark aside h2 { color:#f3f4f6; border-color:#374151; }
+  html.dark button:not(#theme-toggle) { color:#f3f4f6; }
+  html.dark button:not(#theme-toggle):hover { background-color:#4b5563; color:#ffffff; }
+  html.dark #theme-toggle { color:#e5e7eb; }
+  html.dark #theme-toggle:hover { background-color:#4b5563; }
+  /* Explicit light palette baseline */
+  html:not(.dark) body { background-color:#f3f4f6; color:#111827; }
+  html:not(.dark) header { background-color:#e5e7eb; }
+  html:not(.dark) #user-menu { background-color:#ffffff; border:1px solid #d1d5db; }
+  html:not(.dark) aside { background-color:#ffffff; border:1px solid #e5e7eb; }
+  html:not(.dark) aside h2 { color:#111827; border-color:#e5e7eb; }
+  html:not(.dark) button:not(#theme-toggle) { color:#1f2937; }
+  html:not(.dark) button:not(#theme-toggle):hover { background-color:#d1d5db; }
+  html:not(.dark) #theme-toggle { color:#374151; }
+  html:not(.dark) #theme-toggle:hover { background-color:#d1d5db; }
+  /* Light mode dropdown item refinements */
+  html:not(.dark) #user-menu a,
+  html:not(.dark) #user-menu button#theme-toggle,
+  html:not(.dark) #user-menu button[onclick*='logout'] {
+    background-color:transparent;
+    color:#374151;
+    transition:background-color .18s ease, color .18s ease;
+  }
+  html:not(.dark) #user-menu a:hover,
+  html:not(.dark) #user-menu button#theme-toggle:hover,
+  html:not(.dark) #user-menu button[onclick*='logout']:hover {
+    background-color:#f3f4f6;
+  }
+  /* Active nav button tint */
+  html:not(.dark) nav button.bg-blue-500 { box-shadow:0 0 0 1px #1d4ed8 inset; }
+  /* Card panel shadow subtle */
+  html:not(.dark) aside { box-shadow:0 1px 2px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.08); }
+  html.dark aside { box-shadow:0 1px 2px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.4); }
+  /* Brand wordmark adaptive color */
+  .brand { color:#111827; }
+  html.dark .brand { color:#f3f4f6; }
 }
 
-.dark button:not(#theme-toggle) {
-  --tw-text-opacity: 1;
-  color: rgb(243 244 246 / var(--tw-text-opacity)) !important;
-}
+/* Theme toggle label swap handled in JS; if you want CSS-only you could add hidden classes */
 
-.dark button:not(#theme-toggle):hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(55 65 81 / var(--tw-bg-opacity)) !important;
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
-}
+/* Minimal custom scrollbar (WebKit) */
+/* Keep it subtle; widen only on hover for accessibility */
+::-webkit-scrollbar { width: 10px; background: transparent; }
+::-webkit-scrollbar-track { background: transparent; }
+html:not(.dark) ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.25); border-radius: 20px; border: 2px solid transparent; background-clip: content-box; }
+html.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 20px; border: 2px solid transparent; background-clip: content-box; }
+html:not(.dark) ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.4); }
+html.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
 
-.dark #theme-toggle {
-  --tw-text-opacity: 1;
-  color: rgb(243 244 246 / var(--tw-text-opacity)) !important;
-}
+/* Firefox scrollbar */
+html { scrollbar-width: thin; }
+html:not(.dark) { scrollbar-color: rgba(0,0,0,0.35) transparent; }
+html.dark { scrollbar-color: rgba(255,255,255,0.35) transparent; }
 
-.dark #theme-toggle:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(55 65 81 / var(--tw-bg-opacity)) !important;
-}
-
-.dark #theme-toggle span:first-child {
-  display: none;
-}
-
-.dark #theme-toggle span:last-child {
-  display: inline;
-}
-
-#theme-toggle span:first-child {
-  display: inline;
-}
-
-#theme-toggle span:last-child {
-  display: none;
-}
-
-/* Friends Online Panel Dark Mode */
-.dark aside {
-  --tw-bg-opacity: 1;
-  background-color: rgb(31 41 55 / var(--tw-bg-opacity)) !important;
-  --tw-border-opacity: 1;
-  border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
-}
-
-.dark aside h2 {
-  --tw-text-opacity: 1;
-  color: rgb(243 244 246 / var(--tw-text-opacity)) !important;
-  --tw-border-opacity: 1;
-  border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
-}
-
-.dark aside .animate-pulse .bg-gray-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(55 65 81 / var(--tw-bg-opacity)) !important;
-}
-
-.dark aside .animate-pulse .bg-gray-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(75 85 99 / var(--tw-bg-opacity)) !important;
-}
-
-* {
-    font-family: "Poppins", sans-serif;
-}
+/* Optional: smoother inertial feel on touchpads */
+body { overscroll-behavior-y: contain; }

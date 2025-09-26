@@ -1,0 +1,41 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle ? pageTitle + ' | LookAtMe' : 'LookAtMe' %></title>
+  <script>
+    (function() {
+      try {
+        // If server already injected class via cookie, don't override to prevent flash.
+        var hasDarkClass = document.documentElement.classList.contains('dark');
+        var stored = localStorage.getItem('color-theme');
+        if (!stored) {
+          // Sync cookie/localStorage based on current class so future navigations keep it.
+            stored = hasDarkClass ? 'dark' : 'light';
+            localStorage.setItem('color-theme', stored);
+            document.cookie = 'color-theme=' + stored + ';path=/;max-age=' + (60*60*24*365);
+        } else {
+          // If mismatch (e.g., user cleared cookies), reconcile quickly.
+          if (stored === 'dark' && !hasDarkClass) {
+            document.documentElement.classList.add('dark');
+          } else if (stored === 'light' && hasDarkClass) {
+            document.documentElement.classList.remove('dark');
+          }
+          // Ensure cookie matches stored preference.
+          document.cookie = 'color-theme=' + stored + ';path=/;max-age=' + (60*60*24*365);
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="/css/styles.css?v=3">
+  <style>
+    /* Prevent transition flash on theme boundary */
+    .no-theme-transition * { transition: none !important; }
+  </style>
+  <script>
+    document.documentElement.classList.add('no-theme-transition');
+    window.addEventListener('load', function(){
+      // Allow a frame to render then remove to restore transitions
+      setTimeout(()=>document.documentElement.classList.remove('no-theme-transition'), 60);
+    });
+  </script>
+</head>

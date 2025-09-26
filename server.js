@@ -3,6 +3,7 @@ const path = require("path");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
 const { connectDB, userDB } = require("./config/database");
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -11,6 +12,15 @@ app.use(express.static('public'));
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
+
+// Theme class injection middleware
+app.use((req, res, next) => {
+  const theme = req.cookies['color-theme'];
+  // default: no class (light) unless dark specified
+  res.locals.themeClass = theme === 'dark' ? 'class="dark"' : '';
+  next();
+});
 
 // Session middleware
 app.use(session({
@@ -44,7 +54,12 @@ app.get("/login", (req, res) => {
 
 // Home route (protected)
 app.get("/", requireAuth, (req, res) => {
-  res.render("index", { user: req.session.user });
+  res.render("index", { 
+    user: req.session.user, 
+    pageTitle: 'Home', 
+    activePage: 'home',
+    themeClass: res.locals.themeClass // ensure defined for template
+  });
 });
 
 // Authentication routes
@@ -148,11 +163,21 @@ app.post("/auth/logout", (req, res) => {
 
 // Protected routes
 app.get("/profile", requireAuth, (req, res) => {
-  res.render("profile", { user: req.session.user });
+  res.render("profile", { 
+    user: req.session.user, 
+    pageTitle: 'Profile', 
+    activePage: 'profile',
+    themeClass: res.locals.themeClass
+  });
 });
 
 app.get("/settings", requireAuth, (req, res) => {
-  res.render("settings", { user: req.session.user });
+  res.render("settings", { 
+    user: req.session.user, 
+    pageTitle: 'Settings', 
+    activePage: 'settings',
+    themeClass: res.locals.themeClass
+  });
 });
 
 // Database status check endpoint (protected)
@@ -185,19 +210,7 @@ app.get("/api/friends/online", requireAuth, async (req, res) => {
 
 
 
-// Initialize database connection
-async function initializeApp() {
-  const dbConnected = await connectDB();
-  if (!dbConnected) {
-    console.log('Warning: Database not connected. Some features may not work.');
-  } else {
-    console.log('Database connected successfully');
-  }
-}
-
-initializeApp();
-
-// Initialize database connection
+// Initialize database connection (deduplicated)
 async function initializeApp() {
   const dbConnected = await connectDB();
   if (!dbConnected) {

@@ -3,3 +3,14 @@ node_modules/
 
 # package_lock.json
 package-lock.json
+
+# database artifacts
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+*.sql
+/data/
+/database/
+/db/

@@ -1,85 +1,103 @@
-// Theme toggle functionality
+// --- Theme Toggle (Refactored / cookie-synced) ---
+// Early theme application now handled server-side + head partial script; keep logic minimal here.
+
 class ThemeToggle {
+    static instance;
     constructor() {
+        if (ThemeToggle.instance) return ThemeToggle.instance;
+        ThemeToggle.instance = this;
         this.init();
     }
-
-    init() {
-        // Wait for DOM to be ready
+    init(){
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.setup());
-        } else {
-            this.setup();
-        }
+        } else { this.setup(); }
     }
-
-    setup() {
-        this.themeToggle = document.getElementById('theme-toggle');
-        this.themeIcon = document.getElementById('theme-icon');
-        this.themeSwitch = document.getElementById('theme-switch');
+    setup(){
         this.html = document.documentElement;
-        
-        // Initialize theme
-        this.applyTheme(this.getCurrentTheme());
-        this.updateToggleUI();
-        
-        // Add event listener
-        if (this.themeToggle) {
-            this.themeToggle.addEventListener('click', () => this.toggleTheme());
+        this.toggleBtn = document.getElementById('theme-toggle');
+        this.sunPath = document.getElementById('sun-icon');
+        this.moonPath = document.getElementById('moon-icon');
+        this.knob = document.getElementById('theme-switch');
+        this.label = document.getElementById('theme-text');
+
+        // If markup uses dual paths, ensure both present; if not, bail gracefully
+        this.syncFromSaved();
+        this.updateUI();
+
+        if (this.toggleBtn) {
+            this.toggleBtn.setAttribute('role','button');
+            this.toggleBtn.addEventListener('click', (e)=>{ 
+                e.preventDefault(); 
+                e.stopPropagation(); // keep dropdown open
+                this.toggle(); 
+                // keep parent menu visible explicitly
+                const menu = document.getElementById('user-menu');
+                if (menu) menu.classList.remove('hidden');
+            });
         }
     }
-
-    getCurrentTheme() {
+    current(){ return this.html.classList.contains('dark') ? 'dark' : 'light'; }
+    apply(theme){
+        if (theme === 'dark') this.html.classList.add('dark'); else this.html.classList.remove('dark');
         try {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) return savedTheme;
-        } catch (e) {
-            console.warn('Could not access localStorage');
-        }
-        
-        // Default to system preference or light
-        return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            localStorage.setItem('color-theme', theme);
+            // Persist cookie for server-render to avoid flash on navigation
+            document.cookie = 'color-theme=' + theme + ';path=/;max-age=' + (60*60*24*365);
+        } catch(_){ }
     }
-
-    applyTheme(theme) {
-        if (theme === 'dark') {
-            this.html.classList.add('dark');
-        } else {
-            this.html.classList.remove('dark');
-        }
+    syncFromSaved(){
+        try {
+            const saved = localStorage.getItem('color-theme');
+            if (saved === 'dark') this.apply('dark'); else if (saved === 'light') this.apply('light');
+        } catch(_){ }
     }
-
-    updateToggleUI() {
-        const isDark = this.html.classList.contains('dark');
-        
-        if (this.themeIcon) {
-            if (isDark) {
-                // Dark mode - moon icon
-                this.themeIcon.innerHTML = '<path d="M17.293 13.293A8 8 0 716.707 2.707a8.001 8.001 0 1010.586 10.586z"/>';
+    updateUI(){
+        const dark = this.current() === 'dark';
+        if (this.sunPath && this.moonPath){
+            if (dark){
+                this.sunPath.classList.add('hidden');
+                this.moonPath.classList.remove('hidden');
             } else {
-                // Light mode - sun icon  
-                this.themeIcon.innerHTML = '<path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>';
+                this.sunPath.classList.remove('hidden');
+                this.moonPath.classList.add('hidden');
             }
         }
-    }
-
-    toggleTheme() {
-        const isDark = this.html.classList.contains('dark');
-        const newTheme = isDark ? 'light' : 'dark';
-        
-        this.applyTheme(newTheme);
-        this.updateToggleUI();
-        
-        try {
-            localStorage.setItem('theme', newTheme);
-        } catch (e) {
-            console.warn('Could not save theme preference');
+        if (this.knob){
+            this.knob.classList.add('transform','transition-transform','duration-300');
+            if (dark) this.knob.classList.add('translate-x-4'); else this.knob.classList.remove('translate-x-4');
         }
+        if (this.label){ 
+            this.label.textContent = dark ? 'Dark Mode' : 'Light Mode';
+        }
+        // ensure button text color contrasts (explicit utility override if needed)
+        if (this.toggleBtn){
+            if (dark){
+                this.toggleBtn.classList.remove('text-gray-700');
+                this.toggleBtn.classList.add('text-gray-300');
+            } else {
+                this.toggleBtn.classList.remove('text-gray-300');
+                this.toggleBtn.classList.add('text-gray-700');
+            }
+        }
+        if (this.toggleBtn){ this.toggleBtn.setAttribute('aria-pressed', dark ? 'true':'false'); }
+    }
+    toggle(){
+        const next = this.current() === 'dark' ? 'light' : 'dark';
+        this.apply(next);
+        this.updateUI();
     }
 }
+// Ensure single instance
+window.themeToggle = new ThemeToggle();
 
-// Initialize theme toggle
-new ThemeToggle();
+// Centralized global logout (used by header include)
+window.logout = function logout(){
+        fetch('/auth/logout', { method:'POST', headers:{ 'Content-Type':'application/json' } })
+            .then(r=>r.json())
+            .then(d=>{ if(d.success) window.location.href = d.redirect || '/login'; })
+            .catch(err=>{ console.error('Logout error:', err); alert('Logout failed. Please try again.'); });
+};
 
 // Friends Online functionality
 class FriendsOnline {
