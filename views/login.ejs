@@ -1,38 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | LookAtMe</title>
+    <script>
+        // Initialize theme before page loads
+        if (localStorage.getItem('color-theme') === 'dark' || 
+            (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <link rel="stylesheet" href="/css/styles.css?v=3">
 </head>
-<body class="bg-gray-100 text-gray-900 transition-colors duration-300">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
     <div class="min-h-screen flex items-center justify-center p-4">
         <div class="max-w-md w-full">
             <!-- Logo and Branding -->
             <div class="text-center mb-6">
-                <h1 class="text-4xl font-bold tracking-wider text-gray-900 mb-2">LookAtMe</h1>
-                <p class="text-gray-600">Connect with friends and stay in touch</p>
+                <h1 class="text-4xl font-bold tracking-wider text-gray-900 dark:text-white mb-2">LookAtMe</h1>
+                <p class="text-gray-600 dark:text-gray-400">Connect with friends and stay in touch</p>
             </div>
 
             <!-- Auth Card -->
-            <div class="bg-gray-200 rounded-2xl p-6 shadow-sm">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
                 <!-- Login Form -->
                 <div id="login-form-container">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4 text-center">Welcome Back</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 text-center">Welcome Back</h2>
                     
                     <form id="login-form" class="space-y-4">
                         <div>
-                            <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
                             <input type="email" id="login-email" name="email" required 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                    placeholder="Enter your email">
                         </div>
                         
                         <div>
-                            <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
                             <input type="password" id="login-password" name="password" required 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                    placeholder="Enter your password">
                         </div>
                         
@@ -43,7 +52,7 @@
                     </form>
                     
                     <div class="mt-4 text-center">
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 dark:text-gray-400">
                             Don't have an account? 
                             <button id="show-register" class="text-blue-500 hover:text-blue-600 font-medium">
                                 Create Account
@@ -54,34 +63,34 @@
 
                 <!-- Register Form -->
                 <div id="register-form-container" class="hidden">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4 text-center">Create Account</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 text-center">Create Account</h2>
                     
                     <form id="register-form" class="space-y-4">
                         <div>
-                            <label for="register-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <label for="register-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                             <input type="text" id="register-name" name="name" required 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                    placeholder="Enter your full name">
                         </div>
                         
                         <div>
-                            <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <label for="register-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
                             <input type="email" id="register-email" name="email" required 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                    placeholder="Enter your email">
                         </div>
                         
                         <div>
-                            <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <label for="register-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
                             <input type="password" id="register-password" name="password" required 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                    placeholder="Create a password">
                         </div>
                         
                         <div>
-                            <label for="register-confirm" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                            <label for="register-confirm" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
                             <input type="password" id="register-confirm" name="confirmPassword" required 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                    placeholder="Confirm your password">
                         </div>
                         
@@ -92,7 +101,7 @@
                     </form>
                     
                     <div class="mt-4 text-center">
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 dark:text-gray-400">
                             Already have an account? 
                             <button id="show-login" class="text-blue-500 hover:text-blue-600 font-medium">
                                 Sign In
@@ -102,22 +111,18 @@
                 </div>
 
                 <!-- Error Message -->
-                <div id="error-message" class="hidden mt-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm text-center"></div>
+                <div id="error-message" class="hidden mt-4 p-3 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-100 rounded-lg text-sm text-center"></div>
             </div>
 
             <!-- Theme Toggle -->
             <div class="text-center mt-6">
-                <button id="theme-toggle" class="bg-transparent border-none text-gray-900 text-xl cursor-pointer rounded p-2 hover:bg-gray-300 transition-colors duration-200" title="Toggle theme">
-                    <span>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
-                        </svg>
-                    </span>
-                    <span>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
-                        </svg>
-                    </span>
+                <button id="theme-toggle" class="bg-transparent border-none text-gray-900 dark:text-gray-100 text-xl cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" title="Toggle theme">
+                    <svg id="theme-toggle-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                    </svg>
+                    <svg id="theme-toggle-light" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
+                    </svg>
                 </button>
             </div>
         </div>
@@ -133,6 +138,9 @@
             const loginForm = document.getElementById('login-form');
             const registerForm = document.getElementById('register-form');
             const errorMessage = document.getElementById('error-message');
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeToggleDark = document.getElementById('theme-toggle-dark');
+            const themeToggleLight = document.getElementById('theme-toggle-light');
 
             // Form switching
             showRegisterBtn.addEventListener('click', () => {
@@ -213,8 +221,32 @@
                 }
             });
 
+            // Theme toggle functionality
+            function toggleTheme() {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                    themeToggleDark.classList.add('hidden');
+                    themeToggleLight.classList.remove('hidden');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                    themeToggleDark.classList.remove('hidden');
+                    themeToggleLight.classList.add('hidden');
+                }
+            }
+
             // Initialize theme toggle
-            new ThemeToggle();
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // Set initial theme icons
+            if (document.documentElement.classList.contains('dark')) {
+                themeToggleDark.classList.remove('hidden');
+                themeToggleLight.classList.add('hidden');
+            } else {
+                themeToggleDark.classList.add('hidden');
+                themeToggleLight.classList.remove('hidden');
+            }
         });
     </script>
 </body>
