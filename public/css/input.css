@@ -1,6 +1,82 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
 
+/* Simple class-based dark mode overrides with higher specificity */
+.dark body {
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 24 39 / var(--tw-bg-opacity)) !important;
+  --tw-text-opacity: 1;
+  color: rgb(243 244 246 / var(--tw-text-opacity)) !important;
+}
+
+.dark header {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity)) !important;
+}
+
+.dark button:not(#theme-toggle) {
+  --tw-text-opacity: 1;
+  color: rgb(243 244 246 / var(--tw-text-opacity)) !important;
+}
+
+.dark button:not(#theme-toggle):hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity)) !important;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
+}
+
+.dark #theme-toggle {
+  --tw-text-opacity: 1;
+  color: rgb(243 244 246 / var(--tw-text-opacity)) !important;
+}
+
+.dark #theme-toggle:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity)) !important;
+}
+
+.dark #theme-toggle span:first-child {
+  display: none;
+}
+
+.dark #theme-toggle span:last-child {
+  display: inline;
+}
+
+#theme-toggle span:first-child {
+  display: inline;
+}
+
+#theme-toggle span:last-child {
+  display: none;
+}
+
+/* Friends Online Panel Dark Mode */
+.dark aside {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity)) !important;
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
+}
+
+.dark aside h2 {
+  --tw-text-opacity: 1;
+  color: rgb(243 244 246 / var(--tw-text-opacity)) !important;
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
+}
+
+.dark aside .animate-pulse .bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity)) !important;
+}
+
+.dark aside .animate-pulse .bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(75 85 99 / var(--tw-bg-opacity)) !important;
+}
+
 * {
     font-family: "Poppins", sans-serif;
 }

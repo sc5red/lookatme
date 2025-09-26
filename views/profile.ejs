@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<                    <div class="py-2">
+                        <!-- Menu Items -->        <!-- Menu Items -->F-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | LookAtMe</title>
+    <link rel="stylesheet" href="/css/styles.css?v=3">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <header class="flex items-center bg-gray-200 dark:bg-gray-800 rounded-2xl p-2 md:p-4 m-4">
+        <!-- Left side - Logo -->
+        <div class="flex-1">
+            <div class="text-2xl font-bold tracking-wider text-gray-900 dark:text-gray-100">LookAtMe</div>
+        </div>
+        
+        <!-- Center - Navigation -->
+        <nav class="flex gap-4 justify-center flex-1">
+            <button class="bg-transparent border-none text-gray-900 dark:text-gray-100 text-base px-4 py-2 cursor-pointer rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200" onclick="location.href='/'">Home</button>
+            <button class="bg-transparent border-none text-gray-900 dark:text-gray-100 text-base px-4 py-2 cursor-pointer rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200" onclick="location.href='/messages'">Messages</button>
+            <button class="bg-transparent border-none text-gray-900 dark:text-gray-100 text-base px-4 py-2 cursor-pointer rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200" onclick="location.href='/friends'">Friends</button>
+        </nav>
+        
+        <!-- Right side - User Menu -->
+        <div class="flex-1 flex justify-end">
+            <div class="relative">
+                <button id="user-menu-button" class="flex items-center gap-2 bg-transparent border-none text-gray-900 dark:text-gray-100 text-sm px-3 py-2 cursor-pointer rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
+                    <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span class="text-white text-xs font-medium"><%= user.name.charAt(0).toUpperCase() %></span>
+                    </div>
+                    <span><%= user.name %></span>
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+                
+                <!-- Dropdown Menu -->
+                <div id="user-menu" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-gray-700 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-600 z-50">
+                    <div class="py-2">
+                        <!-- Profile Info -->
+
+                        
+                        <!-- Theme Toggle -->
+
+
+                                    </button>
+                                    <button id="dark-mode-btn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors" title="Dark Mode">
+                                        <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Menu Items -->
+                        <a href="/profile" class="flex items-center gap-3 px-4 py-3 text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 font-medium">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                            </svg>
+                            Profile
+                        </a>
+                        
+                        <a href="/settings" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                            </svg>
+                            Settings
+                        </a>
+
+                        <div class="border-t border-gray-200 dark:border-gray-600 my-2"></div>
+
+                        <!-- Theme Toggle -->
+                        <button id="theme-toggle" class="flex items-center justify-between w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-left">
+                            <div class="flex items-center gap-3">
+                                <svg id="theme-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
+                                </svg>
+                                <span id="theme-text">Theme</span>
+                            </div>
+                            <div class="w-10 h-6 bg-gray-300 dark:bg-gray-600 rounded-full relative transition-colors">
+                                <div id="theme-switch" class="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform transform dark:translate-x-4"></div>
+                            </div>
+                        </button>
+
+                        <div class="border-t border-gray-200 dark:border-gray-600 my-2"></div>
+                        
+                        <button onclick="logout()" class="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 01-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"/>
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="m-4 md:m-10">
+        <!-- Profile Header -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="flex items-start space-x-6">
+                <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <span class="text-white text-3xl font-bold"><%= user.name.charAt(0).toUpperCase() %></span>
+                </div>
+                <div class="flex-1">
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2"><%= user.name %></h1>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4"><%= user.email %></p>
+                    <div class="flex items-center space-x-4">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                            <div class="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                            Online
+                        </span>
+                        <button onclick="editProfile()" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                            <i data-lucide="edit" class="w-4 h-4 mr-2"></i>
+                            Edit Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                        <i data-lucide="users" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Friends</p>
+                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                        <i data-lucide="calendar" class="w-6 h-6 text-green-600 dark:text-green-400"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Member Since</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">Today</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                        <i data-lucide="activity" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Status</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">Active</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Information -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Profile Information</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                    <div class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-3 py-2">
+                        <span class="text-gray-900 dark:text-white"><%= user.name %></span>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                    <div class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-3 py-2">
+                        <span class="text-gray-900 dark:text-white"><%= user.email %></span>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
+                    <div class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-3 py-2 min-h-[80px]">
+                        <span class="text-gray-500 dark:text-gray-400 italic">No bio added yet...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Edit Profile</h3>
+                    <button onclick="closeEditModal()" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <form id="edit-profile-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                        <input type="text" name="name" value="<%= user.name %>" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
+                        <textarea name="bio" rows="3" placeholder="Tell us about yourself..." class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                    </div>
+                    
+                    <div class="flex space-x-3 pt-4">
+                        <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                            Save Changes
+                        </button>
+                        <button type="button" onclick="closeEditModal()" class="flex-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+    <script>
+        function editProfile() {
+            document.getElementById('edit-profile-modal').classList.remove('hidden');
+        }
+        
+        function closeEditModal() {
+            document.getElementById('edit-profile-modal').classList.add('hidden');
+        }
+        
+        function logout() {
+            fetch('/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect || '/login';
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                alert('Logout failed. Please try again.');
+            });
+        }
+        
+        // Initialize theme toggle
+        new ThemeToggle();
+    </script>
+</body>
+</html>
