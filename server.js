@@ -44,12 +44,13 @@ function requireAuth(req, res, next) {
 
 // Login page (public route)
 app.get("/login", (req, res) => {
-  // If user is already logged in, redirect to home
   if (req.session.userId) {
-    res.redirect('/');
-  } else {
-    res.render("login");
+    return res.redirect('/');
   }
+  res.render("login", {
+    pageTitle: 'Login',
+    themeClass: res.locals.themeClass
+  });
 });
 
 // Home route (protected)
@@ -180,6 +181,16 @@ app.get("/settings", requireAuth, (req, res) => {
   });
 });
 
+// Premium page (protected)
+app.get('/premium', requireAuth, (req, res) => {
+  res.render('premium', {
+    user: req.session.user,
+    pageTitle: 'Premium',
+    activePage: 'premium',
+    themeClass: res.locals.themeClass
+  });
+});
+
 // Database status check endpoint (protected)
 app.get("/api/status/database", requireAuth, (req, res) => {
   try {
@@ -205,6 +216,86 @@ app.get("/api/friends/online", requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Failed to fetch friends:', error);
     res.json([]); // Return empty array if error
+  }
+});
+
+// Friends page (protected)
+app.get('/friends', requireAuth, async (req, res) => {
+  res.render('friends', {
+    user: req.session.user,
+    pageTitle: 'Friends',
+    activePage: 'friends',
+    themeClass: res.locals.themeClass
+  });
+});
+
+// Friend summary
+app.get('/api/friends/summary', requireAuth, async (req, res) => {
+  try {
+    const summary = await userDB.getFriendSummary(req.session.userId);
+    const pending = await userDB.getPendingCount(req.session.userId);
+    res.json({ ...summary, pendingIncoming: pending.incoming, pendingOutgoing: pending.outgoing });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to load summary' });
+  }
+});
+
+// List friends (optional search param)
+app.get('/api/friends/list', requireAuth, async (req, res) => {
+  try {
+    const { q } = req.query;
+    const list = await userDB.listFriends(req.session.userId, q || null);
+    res.json(list);
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to load friends' });
+  }
+});
+
+// Search users (excluding current) including relation status
+app.get('/api/friends/search', requireAuth, async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.trim().length < 1) return res.json([]);
+    const results = await userDB.searchUsersExcludingExisting(req.session.userId, q.trim());
+    res.json(results);
+  } catch (e) {
+    res.status(500).json({ error: 'Search failed' });
+  }
+});
+
+// Send friend request
+app.post('/api/friends/request', requireAuth, async (req, res) => {
+  try {
+    const { targetId } = req.body;
+    if (!targetId) return res.status(400).json({ error: 'targetId required' });
+    const result = await userDB.sendFriendRequest(req.session.userId, Number(targetId));
+    if (result.error) return res.status(400).json(result);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Request failed' });
+  }
+});
+
+// Accept friend request
+app.post('/api/friends/accept', requireAuth, async (req, res) => {
+  try {
+    const { fromUserId } = req.body;
+    if (!fromUserId) return res.status(400).json({ error: 'fromUserId required' });
+    const result = await userDB.acceptFriendRequest(req.session.userId, Number(fromUserId));
+    if (result.error) return res.status(400).json(result);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Accept failed' });
+  }
+});
+
+// Pending requests (incoming/outgoing lists)
+app.get('/api/friends/pending', requireAuth, async (req, res) => {
+  try {
+    const data = await userDB.getPendingRequests(req.session.userId);
+    res.json(data);
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to load pending' });
   }
 });
 

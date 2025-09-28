@@ -5,6 +5,9 @@
   * { font-family: "Poppins", sans-serif; }
   html { color-scheme: light; }
   html.dark { color-scheme: dark; }
+  /* Offset body content for fixed header height (mobile/desktop) */
+  body { padding-top: 3.5rem; }
+  @media (min-width:768px){ body { padding-top:4rem; } }
   /* Reserve space for scrollbar to prevent layout shift when content height changes */
   html { scrollbar-gutter: stable both-edges; }
   body { overflow-y: scroll; }
@@ -13,7 +16,8 @@
 /* Class-based dark palette (no media queries) */
 @layer utilities {
   html.dark body { background-color:#111827; color:#f3f4f6; }
-  html.dark header { background-color:#1f2937; }
+  /* header inherits body colors now */
+  html.dark header { background-color:#111827; }
   html.dark #user-menu { background-color:#374151; border:1px solid #4b5563; }
   html.dark aside { background-color:#1f2937; border:1px solid #374151; }
   html.dark aside h2 { color:#f3f4f6; border-color:#374151; }
@@ -23,7 +27,7 @@
   html.dark #theme-toggle:hover { background-color:#4b5563; }
   /* Explicit light palette baseline */
   html:not(.dark) body { background-color:#f3f4f6; color:#111827; }
-  html:not(.dark) header { background-color:#e5e7eb; }
+  html:not(.dark) header { background-color:#f3f4f6; }
   html:not(.dark) #user-menu { background-color:#ffffff; border:1px solid #d1d5db; }
   html:not(.dark) aside { background-color:#ffffff; border:1px solid #e5e7eb; }
   html:not(.dark) aside h2 { color:#111827; border-color:#e5e7eb; }
@@ -52,6 +56,17 @@
   /* Brand wordmark adaptive color */
   .brand { color:#111827; }
   html.dark .brand { color:#f3f4f6; }
+  /* Headings adaptive (ensure consistent contrast) */
+  h1,h2,h3,h4,h5,h6 { color:#111827; }
+  html.dark h1,html.dark h2,html.dark h3,html.dark h4,html.dark h5,html.dark h6 { color:#f3f4f6; }
+  /* Links base style (avoid overriding nav/button explicit classes) */
+  a { color:#1d4ed8; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  html.dark a { color:#60a5fa; }
+  html.dark a:hover { text-decoration:underline; }
+  /* Preserve brand after link rule */
+  a.brand { color:#111827; }
+  html.dark a.brand { color:#f3f4f6; }
 }
 
 /* Theme toggle label swap handled in JS; if you want CSS-only you could add hidden classes */
@@ -72,3 +87,17 @@ html.dark { scrollbar-color: rgba(255,255,255,0.35) transparent; }
 
 /* Optional: smoother inertial feel on touchpads */
 body { overscroll-behavior-y: contain; }
+
+/* Rainbow animated text for Remove Ads button (simplified) */
+@layer utilities {
+  .rainbow-text {
+    background:linear-gradient(90deg,#ff0057,#ffb800,#00d07e,#007bff,#7f00ff,#ff0057);
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;
+    background-size:200% 100%;
+    animation:rainbow-slide 3s linear infinite;
+  }
+  #remove-ads-btn:focus { outline:2px solid currentColor; outline-offset:2px; }
+}
+
+@keyframes rainbow-slide { to { background-position:200% 0; } }

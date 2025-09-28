@@ -132,6 +132,109 @@ const userDB = {
       AND u.status = 'online'
     `, [userId, userId, userId]);
     return result.rows;
+  },
+
+  async getFriendSummary(userId) {
+    const total = await query(`
+      SELECT COUNT(*) as count
+      FROM friends
+      WHERE status='accepted' AND (user_id = ? OR friend_id = ?)
+    `, [userId, userId]);
+    const online = await query(`
+      SELECT COUNT(DISTINCT u.id) as count
+      FROM users u
+      JOIN friends f ON (f.friend_id = u.id OR f.user_id = u.id)
+      WHERE (f.user_id = ? OR f.friend_id = ?) 
+        AND u.id != ?
+        AND f.status='accepted'
+        AND u.status='online'
+    `, [userId, userId, userId]);
+    return { total: total.rows[0]?.count || 0, online: online.rows[0]?.count || 0 };
+  },
+
+  async listFriends(userId, searchTerm) {
+    const like = searchTerm ? `%${searchTerm.toLowerCase()}%` : null;
+    const sql = `
+      SELECT DISTINCT u.id, u.name, u.avatar, u.status,
+        CASE WHEN f.user_id = ? THEN f.friend_id ELSE f.user_id END as relation_id
+      FROM users u
+      JOIN friends f ON ( (f.user_id = ? AND f.friend_id = u.id) OR (f.friend_id = ? AND f.user_id = u.id) )
+      WHERE f.status='accepted'
+        ${like ? 'AND lower(u.name) LIKE ?' : ''}
+      ORDER BY lower(u.name) ASC
+      LIMIT 200
+    `;
+    const params = like ? [userId, userId, userId, like] : [userId, userId, userId];
+    const result = await query(sql, params);
+    return result.rows;
+  },
+
+  async searchUsersExcludingExisting(userId, term) {
+    const like = `%${term.toLowerCase()}%`;
+    const result = await query(`
+      SELECT u.id, u.name, u.avatar, u.status,
+        CASE 
+          WHEN f.status IS NULL THEN 'none'
+          ELSE f.status
+        END as friend_status
+      FROM users u
+      LEFT JOIN friends f ON (
+        (f.user_id = ? AND f.friend_id = u.id) OR 
+        (f.friend_id = ? AND f.user_id = u.id)
+      )
+      WHERE u.id != ?
+        AND lower(u.name) LIKE ?
+      ORDER BY lower(u.name) ASC
+      LIMIT 50
+    `, [userId, userId, userId, like]);
+    return result.rows;
+  },
+
+  async sendFriendRequest(userId, targetId) {
+    if (userId === targetId) return { error: 'Cannot add yourself' };
+    try {
+      await runQuery(`INSERT OR IGNORE INTO friends (user_id, friend_id, status) VALUES (?, ?, 'pending')`, [userId, targetId]);
+      return { success: true };
+    } catch (e) {
+      return { error: 'Failed to send request' };
+    }
+  },
+
+  async acceptFriendRequest(userId, fromUserId) {
+    try {
+      await runQuery(`UPDATE friends SET status='accepted' WHERE user_id = ? AND friend_id = ? AND status='pending'`, [fromUserId, userId]);
+      return { success: true };
+    } catch (e) {
+      return { error: 'Failed to accept request' };
+    }
+  },
+
+  async getPendingRequests(userId) {
+    // Incoming requests: where current user is target (friend_id)
+    const incoming = await query(`
+      SELECT f.user_id as fromUserId, u.name, u.status
+      FROM friends f
+      JOIN users u ON u.id = f.user_id
+      WHERE f.friend_id = ? AND f.status='pending'
+      ORDER BY f.created_at DESC
+      LIMIT 100
+    `, [userId]);
+    // Outgoing requests: where current user initiated (user_id)
+    const outgoing = await query(`
+      SELECT f.friend_id as toUserId, u.name, u.status
+      FROM friends f
+      JOIN users u ON u.id = f.friend_id
+      WHERE f.user_id = ? AND f.status='pending'
+      ORDER BY f.created_at DESC
+      LIMIT 100
+    `, [userId]);
+    return { incoming: incoming.rows, outgoing: outgoing.rows };
+  },
+
+  async getPendingCount(userId) {
+    const inc = await query(`SELECT COUNT(*) as count FROM friends WHERE friend_id = ? AND status='pending'`, [userId]);
+    const out = await query(`SELECT COUNT(*) as count FROM friends WHERE user_id = ? AND status='pending'`, [userId]);
+    return { incoming: inc.rows[0]?.count || 0, outgoing: out.rows[0]?.count || 0 };
   }
 };
 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" <%- (typeof themeClass !== 'undefined' ? themeClass : '') %>>
+<%- include('partials/head', { pageTitle: 'Premium' }) %>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+  <%- include('partials/header', { user, activePage: 'premium' }) %>
+  <main class="max-w-5xl mx-auto mt-6 px-4 space-y-8">
+    <section>
+      <h1 class="text-2xl font-bold mb-2">Go Premium</h1>
+      <p class="text-sm text-gray-600 dark:text-gray-400 max-w-prose">Unlock an ad‑free experience plus upcoming features like advanced friend suggestions, real-time notifications, profile themes, and priority support.</p>
+    </section>
+    <section class="grid gap-6 md:grid-cols-3">
+      <div class="p-4 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col">
+        <h2 class="font-semibold mb-2">Free</h2>
+        <ul class="text-sm flex-1 space-y-1 list-disc list-inside">
+          <li>Basic profile</li>
+          <li>Friend system</li>
+          <li>Light / Dark theme</li>
+        </ul>
+        <div class="mt-4 text-xs text-gray-500 dark:text-gray-400">Current plan</div>
+      </div>
+      <div class="p-4 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col relative" style="background-image:linear-gradient(90deg,#ff0057,#ffb800,#00d07e,#007bff,#7f00ff,#ff0057);background-size:200% 100%;animation:rainbow-slide 6s linear infinite; padding:1px;">
+        <div class="bg-white dark:bg-gray-900 p-3 flex flex-col flex-1">
+          <h2 class="font-semibold mb-2 rainbow-text">Premium</h2>
+          <ul class="text-sm flex-1 space-y-1 list-disc list-inside">
+            <li>No ads</li>
+            <li>Priority features</li>
+            <li>Early access modules</li>
+            <li>Custom profile themes</li>
+          </ul>
+          <a href="#" class="mt-4 inline-block text-center text-sm font-semibold bg-gray-900 dark:bg-gray-100 text-gray-100 dark:text-gray-900 px-4 py-2">Subscribe</a>
+        </div>
+      </div>
+      <div class="p-4 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col">
+        <h2 class="font-semibold mb-2">Coming Soon</h2>
+        <ul class="text-sm flex-1 space-y-1 list-disc list-inside">
+          <li>Advanced analytics</li>
+          <li>Custom alerts</li>
+          <li>Exclusive badges</li>
+        </ul>
+        <div class="mt-4 text-xs text-gray-500 dark:text-gray-400">Beta roadmap</div>
+      </div>
+    </section>
+    <section class="text-xs text-gray-500 dark:text-gray-500">
+      <p>Pricing and billing integration not implemented yet. This page is a placeholder for future monetization features.</p>
+    </section>
+  </main>
+  <script src="/js/script.js"></script>
+</body>
+</html>

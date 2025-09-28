@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" <%- (typeof themeClass !== 'undefined' ? themeClass : '') %>>
+<%- include('partials/head', { pageTitle: 'Friends' }) %>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <%- include('partials/header', { user, activePage: 'friends' }) %>
+  <main class="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-6">
+    <!-- Analytics -->
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="p-4 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Total Friends</p>
+        <p id="stat-total" class="mt-1 text-2xl font-semibold">0</p>
+      </div>
+      <div class="p-4 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Online</p>
+        <p id="stat-online" class="mt-1 text-2xl font-semibold text-green-500">0</p>
+      </div>
+      <div class="p-4 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm col-span-2 sm:col-span-1">
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Pending Requests</p>
+        <p id="stat-pending" class="mt-1 text-2xl font-semibold text-yellow-500">0</p>
+      </div>
+      <div class="p-4 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm col-span-2 sm:col-span-1">
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Search Results</p>
+        <p id="stat-search" class="mt-1 text-2xl font-semibold text-blue-500">0</p>
+      </div>
+    </section>
+
+    <!-- Search / Add -->
+    <section class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
+      <div class="flex-1 flex items-center gap-2">
+        <input id="friend-search" type="text" placeholder="Search people by name..." class="w-full px-3 py-2 text-sm rounded-md bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        <button id="clear-search" class="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Clear</button>
+      </div>
+      <div class="text-xs text-gray-500 dark:text-gray-400">Type to find users & send requests</div>
+    </section>
+
+    <!-- Friends Grid -->
+    <section>
+      <h2 class="text-sm font-semibold uppercase tracking-wide mb-3 text-gray-500 dark:text-gray-400">Your Friends</h2>
+      <div id="friends-grid" class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+      <div id="friends-empty" class="hidden text-center text-sm text-gray-500 dark:text-gray-400 py-8">No friends yet.</div>
+    </section>
+
+    <!-- Pending Requests -->
+    <section>
+      <h2 class="text-sm font-semibold uppercase tracking-wide mb-3 text-gray-500 dark:text-gray-400">Pending Requests</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wider mb-2 text-gray-400">Incoming</h3>
+          <div id="pending-incoming" class="flex flex-col gap-3"></div>
+          <div id="pending-incoming-empty" class="text-xs text-gray-500 dark:text-gray-500 mt-2 hidden">No incoming requests.</div>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wider mb-2 text-gray-400">Outgoing</h3>
+            <div id="pending-outgoing" class="flex flex-col gap-3"></div>
+            <div id="pending-outgoing-empty" class="text-xs text-gray-500 dark:text-gray-500 mt-2 hidden">No outgoing requests.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search Results -->
+    <section>
+      <h2 class="text-sm font-semibold uppercase tracking-wide mb-3 text-gray-500 dark:text-gray-400 flex items-center gap-2">Search Results <span id="search-spinner" class="hidden animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></span></h2>
+      <div id="search-grid" class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+      <div id="search-empty" class="hidden text-center text-sm text-gray-500 dark:text-gray-400 py-6">No matches.</div>
+    </section>
+  </main>
+
+  <script src="/js/script.js"></script>
+  <script src="/js/friends.js"></script>
+</body>
+</html>

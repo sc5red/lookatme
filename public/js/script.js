@@ -104,7 +104,11 @@ class FriendsOnline {
     constructor() {
         this.skeleton = document.getElementById('friends-skeleton');
         this.friendsList = document.getElementById('friends-list');
-        this.init();
+        if (this.skeleton && this.friendsList) {
+            this.init();
+        } else {
+            // Component not on this page; no-op
+        }
     }
 
     init() {
