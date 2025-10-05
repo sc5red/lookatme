@@ -56,8 +56,31 @@ async function createTables() {
           console.error('Error creating tables:', err.message);
           reject(err);
         } else {
-          console.log('Database tables created successfully');
-          resolve();
+          // After friends, create posts table
+          db.run(`
+            CREATE TABLE IF NOT EXISTS posts (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              user_id INTEGER NOT NULL,
+              content TEXT DEFAULT '',
+              image TEXT DEFAULT NULL,
+              media_type TEXT DEFAULT NULL,
+              media_url TEXT DEFAULT NULL,
+              audio_duration TEXT DEFAULT NULL,
+              created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+              FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+          `, (err2) => {
+            if (err2) {
+              console.error('Error creating posts table:', err2.message);
+              reject(err2);
+            } else {
+              // Migration: Add new columns to existing table if they don't exist
+              db.run(`ALTER TABLE posts ADD COLUMN media_type TEXT DEFAULT NULL`, () => {});
+              db.run(`ALTER TABLE posts ADD COLUMN media_url TEXT DEFAULT NULL`, () => {});
+              db.run(`ALTER TABLE posts ADD COLUMN audio_duration TEXT DEFAULT NULL`, () => {});
+              resolve();
+            }
+          });
         }
       });
     });
@@ -243,5 +266,36 @@ module.exports = {
   query,
   runQuery,
   userDB,
+  postsDB: {
+    async create(userId, { content='', image=null, mediaType=null, mediaUrl=null, audioDuration=null }) {
+      const result = await runQuery(
+        `INSERT INTO posts (user_id, content, image, media_type, media_url, audio_duration) VALUES (?, ?, ?, ?, ?, ?)`, 
+        [userId, content, image, mediaType, mediaUrl, audioDuration]
+      );
+      const row = await query(
+        `SELECT p.id, p.content, p.image, p.media_type as mediaType, p.media_url as mediaUrl, p.audio_duration as audioDuration, p.created_at as createdAt, u.name, u.avatar, u.id as userId 
+         FROM posts p 
+         JOIN users u ON u.id = p.user_id 
+         WHERE p.id = ?`, 
+        [result.lastID]
+      );
+      return row.rows[0];
+    },
+    async listForUserAndFriends(userId, { limit=50, offset=0 } = {}) {
+      const rows = await query(`
+        SELECT p.id, p.content, p.image, p.media_type as mediaType, p.media_url as mediaUrl, p.audio_duration as audioDuration, p.created_at as createdAt, u.name, u.avatar, u.id as userId
+        FROM posts p
+        JOIN users u ON u.id = p.user_id
+        WHERE p.user_id = ? OR p.user_id IN (
+          SELECT CASE WHEN f.user_id = ? THEN f.friend_id ELSE f.user_id END
+          FROM friends f
+          WHERE (f.user_id = ? OR f.friend_id = ?) AND f.status='accepted'
+        )
+        ORDER BY p.created_at DESC
+        LIMIT ? OFFSET ?
+      `, [userId, userId, userId, userId, limit, offset]);
+      return rows.rows;
+    }
+  },
   db
 };

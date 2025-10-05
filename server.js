@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
-const { connectDB, userDB } = require("./config/database");
+const { connectDB, userDB, postsDB } = require("./config/database");
 const cookieParser = require('cookie-parser');
 
 const app = express();
@@ -296,6 +296,103 @@ app.get('/api/friends/pending', requireAuth, async (req, res) => {
     res.json(data);
   } catch (e) {
     res.status(500).json({ error: 'Failed to load pending' });
+  }
+});
+
+// Create a post
+app.post('/api/posts', requireAuth, async (req, res) => {
+  try {
+    const { content, image } = req.body;
+    if(!content || !content.trim()) return res.status(400).json({ error: 'Content required' });
+    if(content.length > 2000) return res.status(400).json({ error: 'Content too long (max 2000 chars)' });
+    const post = await postsDB.create(req.session.userId, { content: content.trim(), image: image || null });
+    res.json({ success: true, post });
+  } catch (e) {
+    console.error('Create post error:', e);
+    res.status(500).json({ error: 'Failed to create post' });
+  }
+});
+
+// Create a post with media (from post-creator component)
+app.post('/api/posts/create', requireAuth, async (req, res) => {
+  try {
+    const { content, mediaType, gifUrl, gifId, duration } = req.body;
+    
+    // Validate content
+    if (!content && !mediaType) {
+      return res.status(400).json({ error: 'Content or media required' });
+    }
+    
+    if (content && content.length > 100) {
+      return res.status(400).json({ error: 'Content must be 100 characters or less' });
+    }
+    
+    // For now, we'll store the post without actual file uploads
+    // In a production app, you'd handle file uploads with multer and save to disk/cloud
+    const postData = {
+      content: content ? content.trim() : '',
+      mediaType: mediaType || null,
+      mediaUrl: null,
+      audioDuration: duration || null
+    };
+    
+    // Handle different media types
+    if (mediaType === 'gif' && gifUrl) {
+      postData.mediaUrl = gifUrl;
+    }
+    // For audio and image, you would normally process uploaded files here
+    // and store their paths in postData.mediaUrl
+    
+    const post = await postsDB.create(req.session.userId, postData);
+    
+    // Format response to match what the frontend expects
+    const postResponse = {
+      id: post.id,
+      content: post.content,
+      mediaType: post.mediaType,
+      mediaUrl: post.mediaUrl,
+      audioDuration: post.audioDuration,
+      createdAt: post.createdAt,
+      userName: post.name,
+      userId: post.userId,
+      likes: 0,
+      comments: 0
+    };
+    
+    res.json({ success: true, post: postResponse });
+  } catch (e) {
+    console.error('Create post error:', e);
+    res.status(500).json({ error: 'Failed to create post' });
+  }
+});
+
+// Feed endpoint
+app.get('/api/posts/feed', requireAuth, async (req, res) => {
+  try {
+    const { cursor } = req.query; // simple offset pagination
+    const offset = cursor ? parseInt(cursor, 10) : 0;
+    const limit = 50;
+    const posts = await postsDB.listForUserAndFriends(req.session.userId, { limit, offset });
+    
+    // Format posts to match frontend expectations
+    const formattedPosts = posts.map(post => ({
+      id: post.id,
+      content: post.content,
+      mediaType: post.mediaType,
+      mediaUrl: post.mediaUrl,
+      audioDuration: post.audioDuration,
+      createdAt: post.createdAt,
+      userName: post.name,
+      userId: post.userId,
+      likes: 0,
+      comments: 0
+    }));
+    
+    const nextCursor = posts.length === limit ? offset + limit : null;
+    res.json({ posts: formattedPosts, nextCursor });
+  } catch (e) {
+    console.error('Feed error:', e);
+    res.status(500).json({ error: 'Failed to load feed' });
   }
 });
 
