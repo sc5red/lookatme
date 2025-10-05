@@ -57,7 +57,7 @@
   let gifFavorites = JSON.parse(localStorage.getItem('gifFavorites') || '[]');
   let currentGifTab = 'trending';
 
-  const TENOR_API_KEY = 'AIzaSyBGPmafC4dXCj7vnPxgwZ_2ixr9WQ5FN9g'; // Free Tenor key
+  const TENOR_API_KEY = ''; // Free Tenor key
 
   // Initialize
   function init() {
