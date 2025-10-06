@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![LookAt.me Banner](https://via.placeholder.com/1200x300/667eea/ffffff?text=LookAt.me+-+Next+Generation+Social+Network)
+![LookAt.me Banner](https://sdmntpreastus.oaiusercontent.com/files/00000000-d488-61f9-b619-da8774350abf/raw?se=2025-10-05T01%3A38%3A36Z&sp=r&sv=2024-08-04&sr=b&scid=1e69b528-81dd-533a-b1b7-928f0dac645a&skoid=f28c0102-4d9d-4950-baf0-4a8e5f6cf9d4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-05T00%3A12%3A37Z&ske=2025-10-06T00%3A12%3A37Z&sks=b&skv=2024-08-04&sig=4hqJGpRaEq4CFkMTg5OaVL1/aG/DYcfCueKrFa73Yks%3D)
 
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
