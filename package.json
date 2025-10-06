@@ -8,15 +8,17 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "admin": "node admin-server.js",
     "tailwind": "tailwindcss -i ./public/css/input.css -o ./public/css/styles.css --watch"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.13",
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.6.1",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
-    "cookie-parser": "^1.4.7",
     "sqlite3": "^5.1.7",
     "tailwindcss": "^4.1.13"
   }

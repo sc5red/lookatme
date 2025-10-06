@@ -57,10 +57,22 @@
   let gifFavorites = JSON.parse(localStorage.getItem('gifFavorites') || '[]');
   let currentGifTab = 'trending';
 
-  const TENOR_API_KEY = 'AIzaSyBGPmafC4dXCj7vnPxgwZ_2ixr9WQ5FN9g'; // Free Tenor key
+  let TENOR_API_KEY = ''; // Will be loaded from server
+
+  // Load configuration from server
+  async function loadConfig() {
+    try {
+      const response = await fetch('/api/config');
+      const config = await response.json();
+      TENOR_API_KEY = config.tenorApiKey;
+    } catch (error) {
+      console.error('Failed to load API configuration:', error);
+    }
+  }
 
   // Initialize
-  function init() {
+  async function init() {
+    await loadConfig(); // Load API keys first
     if (!textInput) return;
 
     textInput.addEventListener('input', updateCharCounter);

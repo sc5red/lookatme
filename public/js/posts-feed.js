@@ -126,9 +126,21 @@
     
     const userInfo = document.createElement('div');
     userInfo.className = 'flex-1 min-w-0';
+    
+    // Create role badge for admin and advertiser
+    let roleBadge = '';
+    if (post.userRole === 'admin') {
+      roleBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 ml-2">👑 Admin</span>';
+    } else if (post.userRole === 'advertiser') {
+      roleBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 ml-2">📢 Advertiser</span>';
+    } else if (post.userRole === 'premium') {
+      roleBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 ml-2">⭐ Premium</span>';
+    }
+    
     userInfo.innerHTML = `
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <span class="font-semibold text-gray-900 dark:text-gray-100 text-sm">${escapeHtml(post.userName || 'User')}</span>
+        ${roleBadge}
         <span class="text-xs text-gray-500 dark:text-gray-400">${getTimeAgo(post.createdAt)}</span>
       </div>
     `;

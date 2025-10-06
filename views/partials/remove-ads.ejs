@@ -1,3 +1,4 @@
+<% if (user.role !== 'premium' && user.role !== 'admin') { %>
 <div
   class="relative block rounded-md p-[1px] w-full"
   style="background-image:linear-gradient(90deg,#ff0057,#ffb800,#00d07e,#007bff,#7f00ff,#ff0057);background-size:200% 100%;animation:rainbow-slide 3s linear infinite;"
@@ -12,3 +13,4 @@
     Remove ads!
   </button>
 </div>
+<% } %>

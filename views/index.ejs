@@ -7,7 +7,7 @@
     <div class="w-full h-full flex gap-5 xl:gap-6 overflow-hidden">
       <!-- Left side panels -->
       <div class="flex w-64 2xl:w-72 shrink-0 flex-col gap-3 overflow-y-auto h-full pr-2">
-        <%- include('partials/remove-ads') %>
+        <%- include('partials/remove-ads', { user }) %>
         <%- include('partials/friends-online') %>
         <%- include('partials/friend-suggestions') %>
       </div>

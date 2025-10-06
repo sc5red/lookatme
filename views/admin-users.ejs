@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users Management - Admin Dashboard</title>
+  <script>
+    // Early theme application to prevent flash
+    (function() {
+      try {
+        const stored = localStorage.getItem('admin-theme');
+        if (stored === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else if (stored === 'light') {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors m-0 p-0">
+  <%- include('admin-header', { user, activePage: 'users' }) %>
+
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Users Management</h1>
+      <p class="text-gray-600 dark:text-gray-400">Total: <%= users.length %> users</p>
+    </div>
+
+    <!-- Users Table -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-100 dark:bg-gray-900 transition-colors">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">User</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">Role</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">Joined</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-700 transition-colors">
+            <% users.forEach(u => { %>
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">#<%= u.id %></td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900 dark:text-white"><%= u.name %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-600 dark:text-gray-400"><%= u.email %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <select 
+                  class="role-select bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white text-sm rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors"
+                  data-user-id="<%= u.id %>"
+                  onchange="changeRole(this)"
+                  <%= u.id === user.id ? 'disabled' : '' %>
+                >
+                  <option value="user" <%= u.role === 'user' ? 'selected' : '' %>>👤 User</option>
+                  <option value="premium" <%= u.role === 'premium' ? 'selected' : '' %>>⭐ Premium</option>
+                  <option value="advertiser" <%= u.role === 'advertiser' ? 'selected' : '' %>>📢 Advertiser</option>
+                  <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>👑 Admin</option>
+                </select>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-medium rounded-full <%= u.status === 'online' ? 'bg-green-500/20 text-green-400' : 'bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400' %>">
+                  <%= u.status === 'online' ? '🟢 Online' : '⚫ Offline' %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                <%= new Date(u.created_at).toLocaleDateString() %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <button 
+                  onclick="deleteUser(<%= u.id %>, '<%= u.name %>')"
+                  class="text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 text-sm font-medium transition-colors"
+                  <%= u.id === user.id ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '' %>
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    async function changeRole(select) {
+      const userId = select.dataset.userId;
+      const newRole = select.value;
+      
+      if (!confirm(`Are you sure you want to change this user's role to ${newRole}?`)) {
+        location.reload();
+        return;
+      }
+
+      try {
+        const response = await fetch(`/admin/api/users/${userId}/role`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: newRole })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Role updated successfully!');
+          location.reload();
+        } else {
+          alert('Error: ' + (result.error || 'Failed to update role'));
+          location.reload();
+        }
+      } catch (error) {
+        alert('Network error');
+        location.reload();
+      }
+    }
+
+    async function deleteUser(userId, userName) {
+      if (!confirm(`⚠️ Are you sure you want to DELETE user "${userName}"? This action cannot be undone!`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/admin/api/users/${userId}`, {
+          method: 'DELETE'
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('User deleted successfully!');
+          location.reload();
+        } else {
+          alert('Error: ' + (result.error || 'Failed to delete user'));
+        }
+      } catch (error) {
+        alert('Network error');
+      }
+    }
+  </script>
+  <script src="/js/admin-theme.js"></script>
+</body>
+</html>

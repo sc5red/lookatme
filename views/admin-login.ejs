@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - LookAt.me</title>
+  <script>
+    // Early theme application to prevent flash - always dark for login
+    (function() {
+      try {
+        const stored = localStorage.getItem('admin-theme');
+        if (stored === 'dark' || !stored) {
+          document.documentElement.classList.add('dark');
+        } else if (stored === 'light') {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch(e) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50 dark:bg-black min-h-screen flex items-center justify-center transition-colors">
+  <div class="max-w-md w-full mx-4">
+    <!-- Security Warning Banner -->
+    <div class="bg-red-950/50 border-2 border-red-600 rounded-lg p-4 mb-6">
+      <div class="flex items-center gap-3">
+        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+        <div>
+          <p class="text-red-500 font-bold text-sm">RESTRICTED AREA</p>
+          <p class="text-red-400 text-xs">Admin access only. Unauthorized access is logged and prohibited.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="bg-gray-950 rounded-2xl shadow-2xl p-8 border border-gray-800">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-950/50 border-2 border-red-600 mb-4">
+          <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <h1 class="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
+        <p class="text-gray-400 text-sm">LookAt.me Administration Panel</p>
+      </div>
+
+      <% if (error) { %>
+      <div class="bg-red-500/10 border border-red-500 text-red-500 rounded-lg p-4 mb-6 text-sm">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <span><%= error %></span>
+        </div>
+      </div>
+      <% } %>
+
+      <form action="/admin/login" method="POST">
+        <div class="space-y-5">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              required 
+              autocomplete="username"
+              class="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="admin@lookatme.com"
+            >
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-400 mb-2">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              required 
+              autocomplete="current-password"
+              class="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="••••••••"
+            >
+          </div>
+
+          <button 
+            type="submit" 
+            class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+            </svg>
+            Sign In to Admin Panel
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-6 pt-6 border-t border-gray-800">
+        <p class="text-center text-gray-600 text-xs">
+          <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          All access attempts are logged and monitored
+        </p>
+      </div>
+    </div>
+
+    <!-- Back to Main Site -->
+    <div class="text-center mt-6">
+      <a href="http://localhost:3000" class="text-gray-500 hover:text-gray-300 text-sm transition-colors">
+        ← Back to Main Site
+      </a>
+    </div>
+  </div>
+</body>
+</html>

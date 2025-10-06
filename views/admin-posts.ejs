@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posts Management - Admin Dashboard</title>
+  <script>
+    // Early theme application to prevent flash
+    (function() {
+      try {
+        const stored = localStorage.getItem('admin-theme');
+        if (stored === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else if (stored === 'light') {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors m-0 p-0">
+  <%- include('admin-header', { user, activePage: 'posts' }) %>
+
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Posts Management</h1>
+      <p class="text-gray-600 dark:text-gray-400">Total: <%= posts.length %> posts (showing last 100)</p>
+    </div>
+
+    <!-- Posts Grid -->
+    <div class="grid grid-cols-1 gap-4">
+      <% posts.forEach(post => { %>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 transition-colors">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <p class="text-gray-900 dark:text-white font-medium mb-1"><%= post.userName %></p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm"><%= post.userEmail %></p>
+            <p class="text-gray-500 dark:text-gray-500 text-xs mt-1"><%= new Date(post.created_at).toLocaleString() %></p>
+          </div>
+          <button 
+            onclick="deletePost(<%= post.id %>)"
+            class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+          >
+            Delete Post
+          </button>
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 transition-colors">
+          <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap"><%= post.content %></p>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </main>
+
+  <script>
+    async function deletePost(postId) {
+      if (!confirm('⚠️ Are you sure you want to delete this post? This action cannot be undone!')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/admin/api/posts/${postId}`, {
+          method: 'DELETE'
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Post deleted successfully!');
+          location.reload();
+        } else {
+          alert('Error: ' + (result.error || 'Failed to delete post'));
+        }
+      } catch (error) {
+        alert('Network error');
+      }
+    }
+  </script>
+  <script src="/js/admin-theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Denied - Admin Panel</title>
+  <script>
+    // Early theme application to prevent flash
+    (function() {
+      try {
+        const stored = localStorage.getItem('admin-theme');
+        if (stored === 'dark' || !stored) {
+          document.documentElement.classList.add('dark');
+        } else if (stored === 'light') {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch(e) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center transition-colors">
+  <div class="max-w-lg w-full mx-4">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 border-2 border-red-500 transition-colors">
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-500/10 border-4 border-red-500 mb-6">
+          <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+          </svg>
+        </div>
+
+        <h1 class="text-4xl font-bold text-red-500 mb-4">403 - Access Denied</h1>
+        <p class="text-xl text-gray-700 dark:text-gray-300 mb-6">Administrative Privileges Required</p>
+
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-500 rounded-lg p-6 mb-6 transition-colors">
+          <p class="text-gray-700 dark:text-gray-300 text-sm mb-4">
+            <strong class="text-red-600 dark:text-red-400">User:</strong> <%= user %><br>
+            <strong class="text-red-600 dark:text-red-400">Role:</strong> <%= role %><br>
+            <strong class="text-red-600 dark:text-red-400">Required Role:</strong> admin
+          </p>
+          <p class="text-gray-600 dark:text-gray-400 text-xs">
+            ⚠️ This unauthorized access attempt has been logged and will be reviewed by system administrators.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <a 
+            href="http://localhost:3000" 
+            class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors shadow-sm"
+          >
+            Return to Main Site
+          </a>
+          <form action="/admin/logout" method="POST" class="inline-block w-full">
+            <button 
+              type="submit" 
+              class="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-300 font-semibold py-3 px-4 rounded-lg transition-colors"
+            >
+              Logout
+            </button>
+          </form>
+        </div>
+
+        <p class="text-gray-600 dark:text-gray-500 text-xs mt-6">
+          If you believe you should have admin access, please contact your system administrator.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

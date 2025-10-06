@@ -197,20 +197,46 @@ lookatme/
    npm install
    ```
 
-3. **Set up environment variables** (optional)
+3. **Set up environment variables**
    ```bash
-   # Create a .env file
-   SESSION_SECRET=your-secret-key-here
+   # Copy the example environment file
+   cp .env.example .env
+   
+   # Edit .env and add your configuration
+   # Required: TENOR_API_KEY (get one at https://developers.google.com/tenor/guides/quickstart)
+   # Optional: SESSION_SECRET, PORT, ADMIN_PORT
+   ```
+
+   **Environment Variables:**
+   ```env
+   # Server Configuration
+   PORT=3000                                    # Main server port
+   ADMIN_PORT=3001                             # Admin dashboard port
+   NODE_ENV=development                         # Environment (development/production)
+   
+   # Session Security
+   SESSION_SECRET=your-secret-key-here          # Change this to a random string
+   
+   # API Keys
+   TENOR_API_KEY=your-tenor-api-key-here       # Required for GIF search
+   
+   # Database
+   DB_PATH=./data/lookatme.db                  # SQLite database path
    ```
 
 4. **Start the application**
    ```bash
+   # Start main server
    npm start
+   
+   # Start admin dashboard (optional)
+   npm run admin
    ```
 
 5. **Access the application**
    ```
-   Open your browser and navigate to http://localhost:3000
+   Main Site: http://localhost:3000
+   Admin Dashboard: http://localhost:3001/admin/login
    ```
 
 ---

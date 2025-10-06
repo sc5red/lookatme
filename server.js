@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
@@ -96,7 +97,8 @@ app.post("/auth/register", async (req, res) => {
     req.session.user = {
       id: newUser.id,
       name: newUser.name,
-      email: newUser.email
+      email: newUser.email,
+      role: 'user'
     };
     
     res.json({ success: true, user: req.session.user });
@@ -135,7 +137,8 @@ app.post("/auth/login", async (req, res) => {
     req.session.user = {
       id: user.id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      role: user.role || 'user'
     };
     
     res.json({ success: true, user: req.session.user });
@@ -188,6 +191,13 @@ app.get('/premium', requireAuth, (req, res) => {
     pageTitle: 'Premium',
     activePage: 'premium',
     themeClass: res.locals.themeClass
+  });
+});
+
+// API configuration endpoint (protected)
+app.get("/api/config", requireAuth, (req, res) => {
+  res.json({
+    tenorApiKey: process.env.TENOR_API_KEY || ''
   });
 });
 
@@ -354,6 +364,7 @@ app.post('/api/posts/create', requireAuth, async (req, res) => {
       audioDuration: post.audioDuration,
       createdAt: post.createdAt,
       userName: post.name,
+      userRole: post.role,
       userId: post.userId,
       likes: 0,
       comments: 0
@@ -383,6 +394,7 @@ app.get('/api/posts/feed', requireAuth, async (req, res) => {
       audioDuration: post.audioDuration,
       createdAt: post.createdAt,
       userName: post.name,
+      userRole: post.role,
       userId: post.userId,
       likes: 0,
       comments: 0
@@ -410,7 +422,7 @@ async function initializeApp() {
 
 initializeApp();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });

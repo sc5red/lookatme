@@ -35,6 +35,7 @@ async function createTables() {
           avatar TEXT DEFAULT NULL,
           bio TEXT DEFAULT NULL,
           status TEXT DEFAULT 'offline',
+          role TEXT DEFAULT 'user',
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
@@ -78,6 +79,7 @@ async function createTables() {
               db.run(`ALTER TABLE posts ADD COLUMN media_type TEXT DEFAULT NULL`, () => {});
               db.run(`ALTER TABLE posts ADD COLUMN media_url TEXT DEFAULT NULL`, () => {});
               db.run(`ALTER TABLE posts ADD COLUMN audio_duration TEXT DEFAULT NULL`, () => {});
+              db.run(`ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'user'`, () => {});
               resolve();
             }
           });
@@ -134,7 +136,7 @@ const userDB = {
   },
 
   async findById(id) {
-    const result = await query('SELECT id, name, email, avatar, bio, status, created_at FROM users WHERE id = ?', [id]);
+    const result = await query('SELECT id, name, email, avatar, bio, status, role, created_at FROM users WHERE id = ?', [id]);
     return result.rows[0];
   },
 
@@ -273,7 +275,7 @@ module.exports = {
         [userId, content, image, mediaType, mediaUrl, audioDuration]
       );
       const row = await query(
-        `SELECT p.id, p.content, p.image, p.media_type as mediaType, p.media_url as mediaUrl, p.audio_duration as audioDuration, p.created_at as createdAt, u.name, u.avatar, u.id as userId 
+        `SELECT p.id, p.content, p.image, p.media_type as mediaType, p.media_url as mediaUrl, p.audio_duration as audioDuration, p.created_at as createdAt, u.name, u.avatar, u.role, u.id as userId 
          FROM posts p 
          JOIN users u ON u.id = p.user_id 
          WHERE p.id = ?`, 
@@ -283,7 +285,7 @@ module.exports = {
     },
     async listForUserAndFriends(userId, { limit=50, offset=0 } = {}) {
       const rows = await query(`
-        SELECT p.id, p.content, p.image, p.media_type as mediaType, p.media_url as mediaUrl, p.audio_duration as audioDuration, p.created_at as createdAt, u.name, u.avatar, u.id as userId
+        SELECT p.id, p.content, p.image, p.media_type as mediaType, p.media_url as mediaUrl, p.audio_duration as audioDuration, p.created_at as createdAt, u.name, u.avatar, u.role, u.id as userId
         FROM posts p
         JOIN users u ON u.id = p.user_id
         WHERE p.user_id = ? OR p.user_id IN (
